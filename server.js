@@ -7,7 +7,7 @@ const passport = require('./config/passport-config');
 const isLoggedIn = require('./middleware/isLoggedIn');
 const SECRET_SESSION = process.env.SECRET_SESSION;
 const PORT = process.env.PORT || 3000;
-
+const axios = require('axios');
 // import model
 const { User } = require('./models');
 
@@ -20,6 +20,8 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(flash());
+
+const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
 // initial passport
 app.use(passport.initialize());
@@ -36,10 +38,22 @@ app.get('/', (req, res) => {
     res.render('home', {});
 });
 
+
+axios.get(`https://api.rawg.io/api/platforms?key=${RAWG_API_KEY}`)
+.then(response => {
+    console.log('API RESPONSE ---------------\n', response.data.results.length);
+    console.log('Api Status ----------------\n', response.data.status);
+    console.log('Names --------------\n', response.data.name);
+
+    const videoGameObj = {
+        name: response.data.name
+    }
+})
+.catch(error => console.log('ERROR ----\n', error));
+
+
 // import auth routes
 app.use('/auth', require('./controllers/auth'));
-// app.use('/pokemon', require('./controllers/pokemon'));
-// app.use('/', require('./controllers/pokemon'));
 
 // --- AUTHENTICATED ROUTE: go to user profile page --- 
 app.get('/profile', isLoggedIn, (req, res) => {
@@ -47,15 +61,7 @@ app.get('/profile', isLoggedIn, (req, res) => {
     res.render('profile', { name, email, phone });
 });
 
-// any authenticated route will need to have isLoggedIn before controller
-// app.get('/pokemon', isLoggedIn, (req, res) => {
-//     // get data
-//     // render page + send data to page
-// });
 
-// app.get('/pokemon/:id/edit', isLoggedIn, (req, res) => {});
-
-// app.delete('/pokemon/:id', isLoggedIn, (req, res) => {});
 
 
 const server = app.listen(PORT, () => {
