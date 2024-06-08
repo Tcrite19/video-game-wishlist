@@ -34,22 +34,45 @@ app.use((req, res, next) => {
     next(); // going to said route
 });
 
+// app.get('*', (req, res) => {
+//     res.render('404', {});
+// })
+
 app.get('/', (req, res) => {
     res.render('home', {});
 });
 
+app.get('/Games', (req, res) => {
+    axios.get(`https://api.rawg.io/api/games?key=${RAWG_API_KEY}`)
+    .then(response => {
+        console.log('API RESPONSE ---------------\n', response.data.results.length);
+        // console.log('Api Status ----------------\n', response.data);
+        console.log('Names --------------\n', response.data.name);
 
-axios.get(`https://api.rawg.io/api/platforms?key=${RAWG_API_KEY}`)
-.then(response => {
-    console.log('API RESPONSE ---------------\n', response.data.results.length);
-    console.log('Api Status ----------------\n', response.data.status);
-    console.log('Names --------------\n', response.data.name);
+        const videoGameArr = [];
+    
+        for (let i = 0; i < response.data.results.length; i++) {
+            let vg = response.data.results[i];
+            axios.get(vg.url)
+            .then(responseTwo => {
+                const videoGameObj = {
+                    name: responseTwo.data.name,
+                    // released: responseTwo.data.released,
+                    // image: responseTwo.data.background_image,
+                    // id: responseTwo.data.id,
+                    // rating: responseTwo.data.rating
+                }
+                videoGameArr.push(videoGameObj);
+                if(videoGameArr.length === 20) {
+                    res.render('games/index', { videoGameArr: videoGameArr });
+                }
+            })
+            .catch(error => console.log('--- ERROR ---\n', error));
+        }
 
-    const videoGameObj = {
-        name: response.data.name
-    }
-})
-.catch(error => console.log('ERROR ----\n', error));
+    })
+    .catch(error => console.log('ERROR ----\n', error));
+});
 
 
 // import auth routes
