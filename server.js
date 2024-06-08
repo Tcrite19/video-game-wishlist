@@ -48,26 +48,27 @@ app.get('/Games', (req, res) => {
         console.log('API RESPONSE ---------------\n', response.data.results.length);
         // console.log('Api Status ----------------\n', response.data);
         console.log('Names --------------\n', response.data.name);
+        
 
         const videoGameArr = [];
     
         for (let i = 0; i < response.data.results.length; i++) {
             let vg = response.data.results[i];
-            axios.get(vg.url)
-            .then(responseTwo => {
-                const videoGameObj = {
-                    name: responseTwo.data.name,
-                    // released: responseTwo.data.released,
-                    // image: responseTwo.data.background_image,
-                    // id: responseTwo.data.id,
-                    // rating: responseTwo.data.rating
-                }
-                videoGameArr.push(videoGameObj);
-                if(videoGameArr.length === 20) {
-                    res.render('games/index', { videoGameArr: videoGameArr });
-                }
-            })
-            .catch(error => console.log('--- ERROR ---\n', error));
+            // axios.get(vg.url)
+            // .then(responseTwo => {
+            //     const videoGameObj = {
+            //         name: responseTwo.data.name,
+            //         // released: responseTwo.data.released,
+            //         // image: responseTwo.data.background_image,
+            //         // id: responseTwo.data.id,
+            //         // rating: responseTwo.data.rating
+            //     }
+            //     videoGameArr.push(videoGameObj);
+            //     if(videoGameArr.length === 20) {
+            //         res.render('games/index', { videoGameArr: videoGameArr });
+            //     }
+            // })
+            // .catch(error => console.log('--- ERROR ---\n', error));
         }
 
     })
