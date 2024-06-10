@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const gameSchema = new mongoose.Schema({
     name: String,
-    releaseDate: Number,
+    dates: Number,
     image: String,
     price: Number,
     system: String
