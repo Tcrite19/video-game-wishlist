@@ -9,4 +9,4 @@
 <h3>Games</h3>
 <h4>id, name, release_date, price, #ofPlayers, description, consoles, reviews,</h4>
 <h3>Reviews</h3>
-<h4>id, user, comment, date_created</h4>
+<h4>id, user, message, date</h4>

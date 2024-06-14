@@ -26,29 +26,40 @@ const RAWG_API_KEY = process.env.RAWG_API_KEY;
 axios.get(`https://api.rawg.io/api/games?key=${RAWG_API_KEY}`)
 .then(response => {
     // console.log('API RESPONSE ---------------\n', response.data.results.length);
-    console.log('Api Status ----------------\n', response.data);
+    // // console.log('Api Status ----------------\n', response.data);
     // console.log('Names --------------\n', response.data.name);
-
-    // const videoGameArr = [];
     
-    // for (let i = 0; i < response.data.results.length; i++) {
-    //     let vg = response.data.results[i];
-    //     axios.get(vg.url)
-    //     .then(responseTwo => {
-    //         const videoGameObj = {
-    //             name: responseTwo.name
-    //         }
-    //         videoGameArr.push(videoGameObj);
-    //         if(videoGameArr.length === 20) {
-    //             res.render('games/index', { videoGameArr: videoGameArr });
-    //         }
-    //     })
-    //     .catch(error => console.log('--- ERROR ---\n', error));
-    // }
+
+    const videoGameArr = [];
+    console.log(response.data.results[1]);
+
+    for (let i = 0; i < response.data.results.length; i++) {
+        let vg = response.data.results[i];
+         try {
+            // console.log('working');
+            const videoGameObj = {
+                 name: vg.name,
+                 released: vg.released,
+                 image: vg.background_image,
+                 id: vg.id,
+                 rating: vg.rating,
+                 description: vg.description
+              }
+            // console.log(videoGameObj);
+            videoGameArr.push(videoGameObj);
+            // if(videoGameArr.length === 20) {
+            //     res.render('games/index', { videoGameArr: videoGameArr });
+            // }
+        } 
+        catch (error) {
+            console.log('----error----\n');
+            // res.send('error fetching cart');
+        }
+    }
+    // .catch(error => console.log('ERROR ----\n', error));
 
 })
-.catch(error => console.log('ERROR ----\n', error));
 
 const server = app.listen(PORT, () => {
     console.log('🏎️ You are listening on PORT', PORT);
-});
+})

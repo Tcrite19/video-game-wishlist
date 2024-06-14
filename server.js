@@ -6,6 +6,7 @@ const session = require('express-session');
 const passport = require('./config/passport-config');
 const isLoggedIn = require('./middleware/isLoggedIn');
 const SECRET_SESSION = process.env.SECRET_SESSION;
+const RAWG_API_KEY = process.env.RAWG_API_KEY;
 const PORT = process.env.PORT || 3000;
 const axios = require('axios');
 // import model
@@ -20,8 +21,6 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(flash());
-
-const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
 // initial passport
 app.use(passport.initialize());
@@ -44,35 +43,40 @@ app.get('/', (req, res) => {
 
 app.get('/Games', (req, res) => {
     axios.get(`https://api.rawg.io/api/games?key=${RAWG_API_KEY}`)
-    .then(response => {
-        console.log('API RESPONSE ---------------\n', response.data.results.length);
-        // console.log('Api Status ----------------\n', response.data);
-        console.log('Names --------------\n', response.data.name);
-        
-
-        const videoGameArr = [];
+.then(response => {
+    // console.log('API RESPONSE ---------------\n', response.data.results.length);
+    // // console.log('Api Status ----------------\n', response.data);
+    // console.log('Names --------------\n', response.data.name);
     
-        for (let i = 0; i < response.data.results.length; i++) {
-            let vg = response.data.results[i];
-            // axios.get(vg.url)
-            // .then(responseTwo => {
-            //     const videoGameObj = {
-            //         name: responseTwo.data.name,
-            //         // released: responseTwo.data.released,
-            //         // image: responseTwo.data.background_image,
-            //         // id: responseTwo.data.id,
-            //         // rating: responseTwo.data.rating
-            //     }
-            //     videoGameArr.push(videoGameObj);
-            //     if(videoGameArr.length === 20) {
-            //         res.render('games/index', { videoGameArr: videoGameArr });
-            //     }
-            // })
-            // .catch(error => console.log('--- ERROR ---\n', error));
-        }
 
-    })
-    .catch(error => console.log('ERROR ----\n', error));
+    const videoGameArr = [];
+    console.log(response.data.results[1].name);
+
+    for (let i = 0; i < response.data.results.length; i++) {
+        let vg = response.data.results[i];
+         try {
+            console.log('working');
+            const videoGameObj = {
+                 name: vg.name,
+                 released: vg.released,
+                 image: vg.background_image,
+                 id: vg.id,
+                 rating: vg.rating
+              }
+            console.log(videoGameObj);
+            videoGameArr.push(videoGameObj);
+            if(videoGameArr.length === 20) {
+                res.render('games/index', { videoGameArr: videoGameArr });
+            }
+        } 
+        catch (error) {
+            console.log('----error----\n');
+            // res.send('error fetching cart');
+        }
+    }
+    // .catch(error => console.log('ERROR ----\n', error));
+
+})
 });
 
 

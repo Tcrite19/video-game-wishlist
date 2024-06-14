@@ -18,16 +18,43 @@
                     <div class="item">
                         <img src="<%= vg.image %>" alt="">
                         <div class="content">
+                            <div class="title"><%= vg.name %></div>
                             <div class="des">
                                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit saepe totam ex
                                 architecto, perferendis enim tempore quidem, aspernatur dolores iure vel, quibusdam
                                 ipsum dolor illum excepturi dolorum! Amet tempora aut soluta nostrum laudantium, ratione
                                 perferendis.
                             </div>
+                            <div class="buttons">
+                                <button>SEE MORE</button>
+                                <button><a href="/Games/<%= vg.id %>"></a></button>
+                              </div>
                         </div>
                     </div>
                     <% } %>
         </div>
+        <div class="thumbnail">
+            <% for( let i = 0; i < videoGameArr.length; i++ ) { %>
+                <% let vg = videoGameArr[i] %>   
+        <div class="item">
+          <img src="<%= vg.image %>" alt="">
+          <div class="content">
+            <div class="title">
+              <%= vg.name %>
+            </div>
+            <div class="des">
+              <%= vg.type %>
+            </div>
+          </div>
+        </div>
+
+        <% } %>
+      </div>
+      <div class="arrows">
+        <button id="prev"><</button>
+        <button id="next">></button>
+      </div>
+      <div class="time"></div>
     </div>
     <script src="/js/script.js"></script>
 </body>
